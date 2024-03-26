@@ -1,5 +1,14 @@
 local plugins = {
   {
+    'nativerv/cyrillic.nvim',
+    event = { 'VeryLazy' },
+    config = function()
+      require('cyrillic').setup({
+        no_cyrillic_abbrev = false, -- default
+      })
+    end,
+  },
+  {
     "rcarriga/nvim-dap-ui",
     event = "VeryLazy",
     dependencies = "mfussenegger/nvim-dap",
