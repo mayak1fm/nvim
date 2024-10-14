@@ -42,6 +42,8 @@ local plugins = {
     "mfussenegger/nvim-dap",
     config = function(_, _)
       require("core.utils").load_mappings("dap")
+      require "custom.configs.dapadapter"
+      require "custom.configs.dapconfig"
     end
   },
   {
