@@ -1,11 +1,15 @@
-local base = require("plugins.configs.lspconfig")
-local on_attach = base.on_attach
-local capabilities = base.capabilities
-local lspconfig = require("lspconfig")
+require "nvchad.mappings"
+
+-- add yours here
+
+local map = vim.keymap.set
+
+map("n", ";", ":", { desc = "CMD enter command mode" })
+map("i", "jk", "<ESC>")
+
 local wk = require('which-key')
 local diag = vim.diagnostic
 local lsp = vim.lsp
-
 wk.register(
   {
     l = {
@@ -33,9 +37,16 @@ wk.register(
   }
 )
 
-lspconfig.clangd.setup{
-  on_attach = function (client,bufnr)
-   client.server_capabilities.signatureHelpProvider = false
-  end,
-  capabilities = capabilities,
-}
+wk.register(
+  {
+    d = {
+      name = 'DAP',
+      b = { function() require('dap').toggle_breakpoint() end, "toggle_breakpoint" },
+      B = { function() require('dap').set_breakpoint() end, "set_breakpoint" },
+      l = { function() require('dap').run_last() end, "run_last" }
+    }
+  },
+  {
+    prefix = '<Leader>'
+  }
+)

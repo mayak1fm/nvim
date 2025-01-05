@@ -14,7 +14,7 @@ dap.configurations.cpp = {
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
     args = {},
-
+    runInTerminal = true,
     -- 💀
     -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
     --
@@ -26,7 +26,6 @@ dap.configurations.cpp = {
     --
     -- But you should be aware of the implications:
     -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
-    -- runInTerminal = false,
   },
   {
     name = 'Launch',
