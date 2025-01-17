@@ -7,6 +7,19 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
+map("i", "$", ";", { noremap = true, silent = true })
+map("v", "$", ";", { noremap = true, silent = true })
+map("n", "$", ";", { noremap = true, silent = true })
+
+
+map("i", "d$", "в;", { noremap = true, silent = true })
+map("v", "d$", "в;", { noremap = true, silent = true })
+map("n", "d$", "в;", { noremap = true, silent = true })
+
+map("n", "z=", "я=", { noremap = true, silent = true })
+map("n", "zg", "яп", { noremap = true, silent = true })
+
+
 local wk = require('which-key')
 local diag = vim.diagnostic
 local lsp = vim.lsp

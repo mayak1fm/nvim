@@ -10,7 +10,6 @@ if not vim.uv.fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
-
 local lazy_config = require "configs.lazy"
 
 -- load plugins
@@ -24,6 +23,15 @@ require("lazy").setup({
 
   { import = "plugins" },
 }, lazy_config)
+
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {"markdown", "text"},
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en,ru"
+  end,
+})
 
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
