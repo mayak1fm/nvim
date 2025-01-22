@@ -19,6 +19,8 @@ map("n", "d$", "в;", { noremap = true, silent = true })
 map("n", "z=", "я=", { noremap = true, silent = true })
 map("n", "zg", "яп", { noremap = true, silent = true })
 
+map("n", "z", "я", { noremap = true, silent = true })
+map("n", "z", "я", { noremap = true, silent = true })
 
 local wk = require('which-key')
 local diag = vim.diagnostic

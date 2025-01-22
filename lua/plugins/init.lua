@@ -19,7 +19,8 @@ return {
       ensure_installed = {
         "vim", "lua", "vimdoc",
         "html", "css", "cpp",
-        "python", "markdown"
+        "python", "markdown",
+        "markdown_inline"
       },
     },
   },
@@ -73,6 +74,18 @@ return {
       require "configs.dapconfig"
     end
   },
+  { "nvim-tree/nvim-web-devicons", opts = {} },
+
+  {
+    "MeanderingProgrammer/markdown.nvim",
+    name = "render-markdown",
+    ft = { "markdown" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", 'echasnovski/mini.nvim' },
+    config = function()
+      require("render-markdown").setup({})
+    end,
+  },
+
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
@@ -95,11 +108,11 @@ return {
     opts = {
       workspaces = {
         {
-          name = "my_obsidian_vault",
-          path = "~/my_obsidian_vault",
-        },
+          name = "second_brain",
+          path = "~/second_brain",
+        }
       },
-
+      --      ui = { enable = false },
       -- see below for full list of options 👇
     },
   },
