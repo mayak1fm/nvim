@@ -20,7 +20,7 @@ return {
         "vim", "lua", "vimdoc",
         "html", "css", "cpp",
         "python", "markdown",
-        "markdown_inline"
+        "markdown_inline","cmake"
       },
     },
   },
@@ -115,6 +115,27 @@ return {
       --      ui = { enable = false },
       -- see below for full list of options 👇
     },
+  },
+  {
+   "nvim-tree/nvim-tree.lua",
+   dependencies = { "nvim-tree/nvim-web-devicons" },
+   config = function()
+     require("nvim-tree").setup({
+       view = {
+         width = "30%",  -- Ширина окна в процентах от ширины экрана
+         -- Или фиксированная ширина в пикселях:
+         -- width = 300,  -- Ширина окна в пикселях
+       },
+       renderer = {
+         indent_markers = {
+           enable = true,  -- Включить маркеры отступов
+         },
+       },
+       filters = {
+         dotfiles = true,  -- Показывать ли скрытые файлы (начинающиеся с точки)
+       },
+     })
+   end,
   },
   {
     "lewis6991/gitsigns.nvim",

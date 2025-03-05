@@ -7,9 +7,6 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
-map("v", "$", ";", { noremap = true, silent = true })
-map("n", "$", ";", { noremap = true, silent = true })
-
 
 map("v", "d$", "в;", { noremap = true, silent = true })
 map("n", "d$", "в;", { noremap = true, silent = true })
