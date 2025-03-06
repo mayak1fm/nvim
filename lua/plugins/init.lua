@@ -24,7 +24,28 @@ return {
       },
     },
   },
-
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("telescope").setup({
+        defaults = {
+          path_display = { "truncate" },  -- Обрезать начало пути, чтобы показать окончание
+          -- Или можно использовать:
+          -- path_display = { "shorten" },  -- Сократить путь, показывая только важные части
+          -- path_display = { "tail" },     -- Показывать только окончание пути (имя файла)
+        },
+        pickers = {
+          find_files = {
+            theme = "dropdown",  -- Использовать выпадающий список
+          },
+          live_grep = {
+            theme = "dropdown",  -- Использовать выпадающий список
+          },
+        },
+      })
+    end,
+  },
   {
     'nativerv/cyrillic.nvim',
     event = { 'VeryLazy' },
@@ -121,21 +142,42 @@ return {
    dependencies = { "nvim-tree/nvim-web-devicons" },
    config = function()
      require("nvim-tree").setup({
-       view = {
-         width = "30%",  -- Ширина окна в процентах от ширины экрана
-         -- Или фиксированная ширина в пикселях:
-         -- width = 300,  -- Ширина окна в пикселях
-       },
-       renderer = {
-         indent_markers = {
-           enable = true,  -- Включить маркеры отступов
-         },
-       },
-       filters = {
-         dotfiles = true,  -- Показывать ли скрытые файлы (начинающиеся с точки)
-       },
-     })
-   end,
+      view = {
+        width = "30%",  -- Ширина окна в процентах от ширины экрана
+        -- Или фиксированная ширина в пикселях:
+        -- width = 300,  -- Ширина окна в пикселях
+      },
+      renderer = {
+        indent_markers = {
+          enable = true,  -- Включить маркеры отступов
+        },
+      },
+      filters = {
+        dotfiles = true,  -- Показывать ли скрытые файлы (начинающиеся с точки)
+      },
+      actions = {
+        change_dir = {
+          enable = true,  -- Синхронизировать текущий каталог с корнем дерева
+          global = false, -- Не изменять глобальный каталог
+        },
+        open_file = {
+          resize_window = true,  -- Автоматически изменять размер окна
+          quit_on_open = false,  -- Не закрывать дерево при открытии файла
+        },
+      },
+      update_focused_file = {
+        enable = true,  -- Обновлять фокус на текущем файле
+        update_root = true,  -- Синхронизировать корень дерева с текущим каталогом
+      },
+    })
+    -- Автоматически переходить к текущему файлу при открытии nvim-tree
+    vim.api.nvim_create_autocmd("BufEnter", {
+      callback = function()
+        if vim.bo.filetype == "NvimTree" then
+          require("nvim-tree.api").tree.find_file({ open = true, focus = true })
+        end
+      end,
+    })   end,
   },
   {
     "lewis6991/gitsigns.nvim",
