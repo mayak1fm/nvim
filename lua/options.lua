@@ -7,3 +7,9 @@ o.cursorlineopt = 'both' -- to enable cursorline!
 o.relativenumber = true -- относительные линии!
 o.shell = "/usr/bin/zsh" -- терминал zsh
 o.clipboard = "unnamedplus" -- чтоб копировать по кайфу
+
+vim.filetype.add({
+  extension = {
+    tpp = "cpp", -- Распознавать .tpp файлы как C++
+  },
+})
