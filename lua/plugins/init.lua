@@ -23,6 +23,10 @@ return {
       end
   },
   {
+    "nvim-pack/nvim-spectre",
+    dependencies = { "nvim-lua/plenary.nvim" }, -- Обязательная зависимость
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
