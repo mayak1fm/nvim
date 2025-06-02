@@ -36,7 +36,9 @@ return {
   {
     "sitiom/nvim-numbertoggle",
     event = "BufEnter",
-    config = true, -- автоматическая настройка
+    --config = true, -- автоматическая настройка
+    config = function()
+    end,
   },
   {
     "nvim-telescope/telescope.nvim",
