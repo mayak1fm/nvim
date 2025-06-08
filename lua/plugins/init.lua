@@ -271,34 +271,33 @@ return {
     end,
   },
   {
-    "sphamba/smear-cursor.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- ptime_interval = 7, -- milliseconds
-      -- Smear cursor when switching buffers or windows.
-      smear_between_buffers = true,
-
-      -- Smear cursor when moving within line or to neighbor lines.
-      -- Use `min_horizontal_distance_smear` and `min_vertical_distance_smear` for finer control
-      smear_between_neighbor_lines = true,
-
-      -- Draw the smear in buffer space instead of screen space when scrolling
-      scroll_buffer_space = true,
-
-      -- Set to `true` if your font supports legacy computing symbols (block unicode symbols).
-      -- Smears will blend better on all backgrounds.
-      legacy_computing_symbols_support = false,
-
-      -- Smear cursor in insert mode.
-      -- See also `vertical_bar_cursor_insert_mode` and `distance_stop_animating_vertical_bar`.
-      smear_insert_mode = true,
-    },
-  },
-  {
     'echasnovski/mini.surround',
     event = "VeryLazy",
     version = false
   },
+
+  -- nvim v0.8.0
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
+  },
+
   {
     "tris203/precognition.nvim",
     event = "VeryLazy",
