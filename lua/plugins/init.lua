@@ -6,12 +6,12 @@ return {
   },
 
   -- These are some examples, uncomment them if you want to see them work!
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "configs.lspconfig"
-    end,
-  },
+  --{
+  --  "neovim/nvim-lspconfig",
+  --  config = function()
+  --    require "configs.lspconfig"
+  --  end,
+  --},
   {
     "kylechui/nvim-surround",
     version = "^3.0.0", -- Use for stability; omit to use `main` branch for the latest features
@@ -32,7 +32,7 @@ return {
       ensure_installed = {
         "vim", "lua", "vimdoc",
         "html", "css", "cpp",
-        "python", "markdown",
+        "python","yaml","markdown",
         "markdown_inline", "cmake"
       },
     },
@@ -214,7 +214,7 @@ return {
           deepseek = function()
             return require("codecompanion.adapters").extend("deepseek", {
               env = {
-                api_key = "YOUR_API_KEY",
+                api_key = "sk-580b6d77bc94499781e7a3fc5cc20741",
               },
             })
           end,
@@ -315,35 +315,4 @@ return {
       "rcarriga/nvim-notify",
     }
   },
-  {
-    "tris203/precognition.nvim",
-    event = "VeryLazy",
-    opts = {
-      startVisible = true,
-      showBlankVirtLine = true,
-      highlightColor = { link = "Comment" },
-      hints = {
-        Caret = { text = "^", prio = 2 },
-        Dollar = { text = "$", prio = 1 },
-        MatchingPair = { text = "%", prio = 5 },
-        Zero = { text = "0", prio = 1 },
-        w = { text = "w", prio = 10 },
-        b = { text = "b", prio = 9 },
-        e = { text = "e", prio = 8 },
-        W = { text = "W", prio = 7 },
-        B = { text = "B", prio = 6 },
-        E = { text = "E", prio = 5 },
-      },
-      gutterHints = {
-        G = { text = "G", prio = 10 },
-        gg = { text = "gg", prio = 9 },
-        PrevParagraph = { text = "{", prio = 8 },
-        NextParagraph = { text = "}", prio = 8 },
-      },
-      disabled_fts = {
-        "startify",
-      },
-    },
-  }
-
 }
