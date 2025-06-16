@@ -40,7 +40,7 @@ dofile(vim.g.base46_cache .. "statusline")
 require "options"
 require "nvchad.autocmds"
 
---vim.lsp.enable({'clangd'})
+vim.lsp.enable({'clangd'})
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
