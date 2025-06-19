@@ -30,10 +30,10 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
-        "vim", "lua", "vimdoc",
+        "vim","lua", "vimdoc",
         "html", "css", "cpp",
         "python","yaml","markdown",
-        "markdown_inline", "cmake"
+        "markdown_inline", "cmake","dockerfile"
       },
     },
   },
@@ -150,7 +150,7 @@ return {
       workspaces = {
         {
           name = "second_brain",
-          path = "~/second_brain",
+          path = "~/Documents/second_brain",
         }
       },
       --      ui = { enable = false },
@@ -201,32 +201,86 @@ return {
     end,
   },
   {
-    "olimorris/codecompanion.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    event = "VeryLazy",
-    config = function()
-
-      require("codecompanion").setup({
-        adapters = {
-          deepseek = function()
-            return require("codecompanion.adapters").extend("deepseek", {
-              env = {
-                api_key = "sk-580b6d77bc94499781e7a3fc5cc20741",
-              },
-            })
-          end,
-        },
-        strategies = {
-          chat = { adapter = "deepseek", },
-          inline = { adapter = "deepseek" },
-          agent = { adapter = "deepseek" },
-        },
-      })
-    end
+  "olimorris/codecompanion.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    "ravitemer/codecompanion-history.nvim",
+    "ravitemer/mcphub.nvim" -- Добавленная зависимость
   },
+  event = "VeryLazy",
+  config = function()
+    require("codecompanion").setup({
+      adapters = {
+        deepseek = function()
+          return require("codecompanion.adapters").extend("deepseek", {
+            env = {
+              api_key = "sk-580b6d77bc94499781e7a3fc5cc20741",
+            },
+          })
+        end,
+      },
+      prompt_library = {
+        ["RussianChat"] = {
+          strategy = "chat",
+          description = "russian lang",
+          prompts = {
+            {
+              role = "system",
+              content = "You are an experienced developer with c++",
+            },
+            {
+              role = "user",
+              content = "Отвечай и рассуждай на русском языке ..."
+            }
+          },
+        },
+      },
+      strategies = {
+        chat = { adapter = "deepseek" },
+        inline = { adapter = "deepseek" },
+        agent = { adapter = "deepseek" },
+      },
+      extensions = {
+        history = {
+          enabled = true,
+          opts = {
+            keymap = "gh",
+            save_chat_keymap = "sc",
+            auto_save = true,
+            expiration_days = 0,
+            picker = "telescope",
+            picker_keymaps = {
+              rename = { n = "r", i = "<M-r>" },
+              delete = { n = "d", i = "<M-d>" },
+              duplicate = { n = "<C-y>", i = "<C-y>" },
+            },
+            auto_generate_title = true,
+            title_generation_opts = {
+              adapter = nil,
+              model = nil,
+              refresh_every_n_prompts = 0,
+              max_refreshes = 3,
+            },
+            continue_last_chat = false,
+            delete_on_clearing_chat = false,
+            dir_to_save = vim.fn.expand("~/Documents/second_brain/deepseek"),
+            enable_logging = false,
+            chat_filter = nil,
+          }
+        },
+        mcphub = {
+          callback = "mcphub.extensions.codecompanion",
+          opts = {
+          show_result_in_chat = true,  -- Show mcp tool results in chat
+          make_vars = true,            -- Convert resources to #variables
+          make_slash_commands = true,  -- Add prompts as /slash commands
+          }
+        }
+      }
+    })
+  end
+},
   {
     "lewis6991/gitsigns.nvim",
     config = function()

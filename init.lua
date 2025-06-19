@@ -42,6 +42,12 @@ require "nvchad.autocmds"
 
 vim.lsp.enable({'clangd'})
 
+vim.filetype.add({
+  filename = {
+    ["DockerFileDev.custom"] = "dockerfile",
+  },
+})
+
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
