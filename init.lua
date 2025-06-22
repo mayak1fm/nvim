@@ -48,14 +48,30 @@ vim.filetype.add({
   },
 })
 
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
-  end,
-})
+--vim.api.nvim_create_autocmd('LspAttach', {
+--  callback = function(ev)
+--    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+--    if client:supports_method('textDocument/completion') then
+--      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+--    end
+--  end,
+--})
+--
+
+vim.cmd([[
+function! OpenTerminalWithTmux() abort
+  if executable('tmux')
+    execute "terminal tmux"
+  else
+    execute "terminal"
+    echo "tmux не установлен! Запущен обычный терминал."
+  endif
+endfunction
+
+command! Terminal call OpenTerminalWithTmux()
+cnoreabbrev <expr> terminal (getcmdtype() == ':' && getcmdline() == 'terminal') ? 'Terminal' : 'terminal'
+]])
+
 
 vim.schedule(function()
   require "mappings"
