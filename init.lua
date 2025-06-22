@@ -66,6 +66,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 
+-- Отключает авто-справку при вводе
+vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+  vim.lsp.handlers.signature_help, {
+    focusable = false,  -- Запрещает фокусировку
+    silent = true       -- Отключает автоматическое открытие
+  }
+)
+
 
 vim.cmd([[
 function! OpenTerminalWithTmux() abort
