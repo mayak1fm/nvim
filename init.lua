@@ -58,6 +58,15 @@ vim.filetype.add({
 --})
 --
 
+-- Отключает автофокус на LSP-окнах
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf, desc = 'Показать документацию (без автофокуса)' })
+  end,
+})
+
+
+
 vim.cmd([[
 function! OpenTerminalWithTmux() abort
   if executable('tmux')
