@@ -264,7 +264,7 @@ return {
             },
             continue_last_chat = false,
             delete_on_clearing_chat = false,
-            dir_to_save = vim.fn.expand("~/Documents/second_brain/deepseek"),
+            dir_to_save = vim.fn.expand("~/Documents/deepseek"),
             enable_logging = false,
             chat_filter = nil,
           }
