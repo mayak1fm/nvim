@@ -1,24 +1,14 @@
 return {
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
   },
-
-  -- These are some examples, uncomment them if you want to see them work!
-  --{
-  --  "neovim/nvim-lspconfig",
-  --  config = function()
-  --    require "configs.lspconfig"
-  --  end,
-  --},
   {
     "kylechui/nvim-surround",
     version = "^3.0.0", -- Use for stability; omit to use `main` branch for the latest features
     event = "VeryLazy",
     config = function()
       require("nvim-surround").setup({
-        -- Configuration here, or leave empty to use defaults
       })
     end
   },
@@ -40,7 +30,6 @@ return {
   {
     "sitiom/nvim-numbertoggle",
     event = "BufEnter",
-    --config = true, -- автоматическая настройка
     config = function()
     end,
   },
@@ -51,18 +40,7 @@ return {
       require("telescope").setup({
         defaults = {
           path_display = { "truncate" }, -- Обрезать начало пути, чтобы показать окончание
-          -- Или можно использовать:
-          -- path_display = { "shorten" },  -- Сократить путь, показывая только важные части
-          -- path_display = { "tail" },     -- Показывать только окончание пути (имя файла)
         },
-        --        pickers = {
-        --          find_files = {
-        --            theme = "dropdown",  -- Использовать выпадающий список
-        --          },
-        --          live_grep = {
-        --            theme = "dropdown",  -- Использовать выпадающий список
-        --          },
-        --        },
       })
     end,
   },
@@ -78,43 +56,6 @@ return {
   {
     "nvim-neotest/nvim-nio"
   },
-  -- {
-  --   "rcarriga/nvim-dap-ui",
-  --   event = "VeryLazy",
-  --   dependencies = "mfussenegger/nvim-dap",
-  --   config = function()
-  --     local dap = require("dap")
-  --     local dapui = require("dapui")
-  --     dapui.setup()
-  --     dap.listeners.after.event_initialized["dapui_config"] = function()
-  --       dapui.open()
-  --     end
-  --     dap.listeners.before.event_terminated["dapui_config"] = function()
-  --       dapui.close()
-  --     end
-  --     dap.listeners.before.event_exited["dapui_config"] = function()
-  --       dapui.close()
-  --     end
-  --   end
-  -- },
-  -- {
-  --   "jay-babu/mason-nvim-dap.nvim",
-  --   event = "VeryLazy",
-  --   dependencies = {
-  --     "williamboman/mason.nvim",
-  --     "mfussenegger/nvim-dap",
-  --   },
-  --   opts = {
-  --     handlers = {}
-  --   },
-  -- },
-  -- {
-  --   "mfussenegger/nvim-dap",
-  --   config = function(_, _)
-  --     require "configs.dapadapter"
-  --     require "configs.dapconfig"
-  --   end
-  -- },
   { "nvim-tree/nvim-web-devicons", opts = {} },
 
   {
@@ -132,19 +73,8 @@ return {
     version = "*", -- recommended, use latest release instead of latest commit
     lazy = true,
     ft = "markdown",
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/*.md"
-    --   -- refer to `:h file-pattern` for more examples
-    --   "BufReadPre path/to/my-vault/*.md",
-    --   "BufNewFile path/to/my-vault/*.md",
-    -- },
     dependencies = {
-      -- Required.
       "nvim-lua/plenary.nvim",
-
-      -- see below for full list of optional dependencies 👇
     },
     opts = {
       workspaces = {
@@ -153,8 +83,6 @@ return {
           path = "~/Documents/second_brain",
         }
       },
-      --      ui = { enable = false },
-      -- see below for full list of options 👇
     },
   },
   {
@@ -164,17 +92,12 @@ return {
       require("nvim-tree").setup({
         view = {
           width = "30%", -- Ширина окна в процентах от ширины экрана
-          -- Или фиксированная ширина в пикселях:
-          -- width = 300,  -- Ширина окна в пикселях
         },
         renderer = {
           indent_markers = {
             enable = true, -- Включить маркеры отступов
           },
         },
-        -- filters = {
-        --   dotfiles = true,  -- Показывать ли скрытые файлы (начинающиеся с точки)
-        -- },
         actions = {
           change_dir = {
             enable = true,  -- Синхронизировать текущий каталог с корнем дерева
@@ -343,30 +266,21 @@ return {
       "LazyGitFilter",
       "LazyGitFilterCurrentFile",
     },
-    -- optional for floating window border decoration
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
     keys = {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     }
   },
-  -- lazy.nvim
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- add any options here
-    },
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      "rcarriga/nvim-notify",
-    }
-  },
+--  {
+--    "folke/noice.nvim",
+--    event = "VeryLazy",
+--    opts = {
+--    },
+--    dependencies = {
+--      "MunifTanjim/nui.nvim",
+--      "rcarriga/nvim-notify",
+--    }
+--  },
 }
