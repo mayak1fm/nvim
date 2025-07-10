@@ -33,6 +33,12 @@ vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search(
     desc = "Search on current file"
 })
 
+vim.api.nvim_set_keymap('n', '<C-S-Left>', '<C-w><', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-S-Right>', '<C-w>>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-S-Up>', '<C-w>-', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-S-Down>', '<C-w>+', {noremap = true})
+vim.opt.mouse = 'a'
+
 wk.add(
  {
     { "<Leader>l", group = "LSP" },
