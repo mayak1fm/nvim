@@ -252,13 +252,7 @@ return {
       })
     end,
   },
-  {
-    'echasnovski/mini.surround',
-    event = "VeryLazy",
-    version = false
-  },
-
-  -- nvim v0.8.0
+  
   {
     "kdheepak/lazygit.nvim",
     lazy = true,
@@ -276,14 +270,4 @@ return {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
     }
   },
---  {
---    "folke/noice.nvim",
---    event = "VeryLazy",
---    opts = {
---    },
---    dependencies = {
---      "MunifTanjim/nui.nvim",
---      "rcarriga/nvim-notify",
---    }
---  },
 }

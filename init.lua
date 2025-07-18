@@ -89,10 +89,8 @@ command! Terminal call OpenTerminalWithTmux()
 cnoreabbrev <expr> terminal (getcmdtype() == ':' && getcmdline() == 'terminal') ? 'Terminal' : 'terminal'
 ]])
 
-
 vim.schedule(function()
   require "mappings"
 end)
-
 
 

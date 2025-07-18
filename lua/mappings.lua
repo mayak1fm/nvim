@@ -33,6 +33,8 @@ vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search(
     desc = "Search on current file"
 })
 
+vim.keymap.set("n", "<leader>sc", "z=", { desc = "Показать варианты исправлений" })
+
 vim.api.nvim_set_keymap('n', '<C-S-Left>', '<C-w><', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-S-Right>', '<C-w>>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-S-Up>', '<C-w>-', {noremap = true})
