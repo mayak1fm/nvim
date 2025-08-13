@@ -40,7 +40,7 @@ dofile(vim.g.base46_cache .. "statusline")
 require "options"
 require "nvchad.autocmds"
 
-vim.lsp.enable({'clangd'})
+vim.lsp.enable({'clang','pyright'})
 
 vim.filetype.add({
   filename = {
@@ -59,35 +59,21 @@ vim.filetype.add({
 --
 
 -- Отключает автофокус на LSP-окнах
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(args)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf, desc = 'Показать документацию (без автофокуса)' })
-  end,
-})
+--vim.api.nvim_create_autocmd('LspAttach', {
+--  callback = function(args)
+--    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf, desc = 'Показать документацию (без автофокуса)' })
+--  end,
+--})
+--
+--
+---- Отключает авто-справку при вводе
+--vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+--  vim.lsp.handlers.signature_help, {
+--    focusable = false,  -- Запрещает фокусировку
+--    silent = true       -- Отключает автоматическое открытие
+--  }
+--)
 
-
--- Отключает авто-справку при вводе
-vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
-  vim.lsp.handlers.signature_help, {
-    focusable = false,  -- Запрещает фокусировку
-    silent = true       -- Отключает автоматическое открытие
-  }
-)
-
-
-vim.cmd([[
-function! OpenTerminalWithTmux() abort
-  if executable('tmux')
-    execute "terminal tmux"
-  else
-    execute "terminal"
-    echo "tmux не установлен! Запущен обычный терминал."
-  endif
-endfunction
-
-command! Terminal call OpenTerminalWithTmux()
-cnoreabbrev <expr> terminal (getcmdtype() == ':' && getcmdline() == 'terminal') ? 'Terminal' : 'terminal'
-]])
 
 vim.schedule(function()
   require "mappings"
