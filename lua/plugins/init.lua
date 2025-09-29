@@ -138,18 +138,21 @@ return {
   config = function()
     require("codecompanion").setup({
       adapters = {
-        deepseek = function()
-          return require("codecompanion.adapters").extend("deepseek", {
-            env = {
-              api_key = "sk-580b6d77bc94499781e7a3fc5cc20741",
-            },
-          })
-        end,
+        http = {
+          deepseek = function()
+            return require("codecompanion.adapters.http").extend("deepseek", {
+              env = {
+                api_key = "sk-580b6d77bc94499781e7a3fc5cc20741",
+              },
+            })
+          end,
+        }
       },
       prompt_library = {
         ["RussianChat"] = {
           strategy = "chat",
           description = "russian lang",
+          opts = {}, -- возможно, нужно передать пустые opts
           prompts = {
             {
               role = "system",
@@ -195,14 +198,14 @@ return {
             chat_filter = nil,
           }
         },
-        mcphub = {
-          callback = "mcphub.extensions.codecompanion",
-          opts = {
-          show_result_in_chat = true,  -- Show mcp tool results in chat
-          make_vars = true,            -- Convert resources to #variables
-          make_slash_commands = true,  -- Add prompts as /slash commands
-          }
-        }
+      --  mcphub = {
+      --    callback = "mcphub.extensions.codecompanion",
+      --    opts = {
+      --    show_result_in_chat = true,  -- Show mcp tool results in chat
+      --    make_vars = true,            -- Convert resources to #variables
+      --    make_slash_commands = true,  -- Add prompts as /slash commands
+      --    }
+      --  }
       }
     })
   end
