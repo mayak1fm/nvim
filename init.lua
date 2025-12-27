@@ -48,32 +48,36 @@ vim.filetype.add({
   },
 })
 
---vim.api.nvim_create_autocmd('LspAttach', {
---  callback = function(ev)
---    local client = vim.lsp.get_client_by_id(ev.data.client_id)
---    if client:supports_method('textDocument/completion') then
---      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
---    end
---  end,
---})
---
+vim.api.nvim_create_autocmd('TextYankPost', {
+  pattern = '*',
+  callback = function()
+    if vim.v.event.operator == 'y' then
+      local data = vim.fn.getreg('"')
+      local encoded = vim.fn.system('base64 -w0 | tr -d "\\n"', data)
+      vim.fn.chansend(vim.v.stderr, '\027]52;c;' .. encoded .. '\027\\')
+    end
+  end,
+})
 
--- Отключает автофокус на LSP-окнах
---vim.api.nvim_create_autocmd('LspAttach', {
---  callback = function(args)
---    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf, desc = 'Показать документацию (без автофокуса)' })
---  end,
---})
---
---
----- Отключает авто-справку при вводе
---vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
---  vim.lsp.handlers.signature_help, {
---    focusable = false,  -- Запрещает фокусировку
---    silent = true       -- Отключает автоматическое открытие
---  }
---)
 
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
+-- Автоматически использовать системный буфер обмена для всех операций
+vim.opt.clipboard = 'unnamedplus'
+
+-- Клавиши для копирования/вставки с системным буфером
+vim.keymap.set('v', '<C-c>', '"+y', { noremap = true })
+vim.keymap.set('n', '<C-v>', '"+p', { noremap = true })
+vim.keymap.set('i', '<C-v>', '<C-r>+', { noremap = true })
 
 vim.schedule(function()
   require "mappings"
