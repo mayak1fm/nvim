@@ -17,6 +17,15 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" }, -- Обязательная зависимость
   },
   {
+      'nvim-flutter/flutter-tools.nvim',
+      lazy = false,
+      dependencies = {
+          'nvim-lua/plenary.nvim',
+          'stevearc/dressing.nvim', -- optional for vim.ui.select
+      },
+      config = true,
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
@@ -198,14 +207,6 @@ return {
             chat_filter = nil,
           }
         },
-      --  mcphub = {
-      --    callback = "mcphub.extensions.codecompanion",
-      --    opts = {
-      --    show_result_in_chat = true,  -- Show mcp tool results in chat
-      --    make_vars = true,            -- Convert resources to #variables
-      --    make_slash_commands = true,  -- Add prompts as /slash commands
-      --    }
-      --  }
       }
     })
   end
