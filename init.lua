@@ -76,7 +76,7 @@ vim.opt.clipboard = 'unnamedplus'
 
 -- Клавиши для копирования/вставки с системным буфером
 vim.keymap.set('v', '<C-c>', '"+y', { noremap = true })
-vim.keymap.set('n', '<C-v>', '"+p', { noremap = true })
+--vim.keymap.set('n', '<C-v>', '"+p', { noremap = true })
 vim.keymap.set('i', '<C-v>', '<C-r>+', { noremap = true })
 
 vim.schedule(function()
