@@ -46,6 +46,8 @@ local function sync_alacritty(c)
     "draw_bold_text_with_bright_colors = true",
   }
 
+  -- удаляем симлинк если есть, создаём обычный файл
+  os.remove(out)
   local f = io.open(out, "w")
   if not f then
     vim.notify("alacritty sync: cannot write " .. out, vim.log.levels.WARN)
@@ -63,17 +65,12 @@ local function sync_tmux(c)
   if not vim.env.TMUX then return end
 
   local cmds = {
-    -- статусбар
     ('tmux set -g status-style "fg=%s,bg=%s"'):format(c.white, c.statusline_bg),
     ('tmux set -g status-left "#[fg=%s]%%H:%%M #[fg=%s]• "'):format(c.green, c.white),
-    -- активное окно
     ('tmux set -g window-status-current-format "#[fg=%s,bg=%s] #I:#W "'):format(c.black, c.green),
-    -- неактивные окна (fg = цвет фона активной вкладки)
     ('tmux set -g window-status-format "#[fg=%s,bg=%s] #I:#W "'):format(c.green, c.one_bg2),
-    -- границы панелей
     ('tmux set -g pane-border-style "fg=%s"'):format(c.one_bg3),
     ('tmux set -g pane-active-border-style "fg=%s"'):format(c.green),
-    -- сообщения
     ('tmux set -g message-style "fg=%s,bg=%s"'):format(c.black, c.yellow),
   }
 
