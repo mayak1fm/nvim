@@ -22,7 +22,7 @@ return {
     build = ":TSUpdate",
     opts = {
       ensure_installed = {
-        "dart", "cpp","python", "yaml", "markdown",
+        "dart", "cpp", "python", "yaml", "markdown",
         "markdown_inline", "cmake", "dockerfile"
       },
     },
@@ -129,102 +129,86 @@ return {
   {
     "olimorris/codecompanion.nvim",
     dependencies = {
-        "nvim-lua/plenary.nvim",
-        "nvim-treesitter/nvim-treesitter",
-        "ravitemer/codecompanion-history.nvim",
-        "ravitemer/mcphub.nvim"
-        -- { "MeanderingProgrammer/render-markdown.nvim", ft = { "markdown", "codecompanion" } },
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "ravitemer/codecompanion-history.nvim",
+      "ravitemer/mcphub.nvim",
     },
     event = "VeryLazy",
     config = function()
-        require("codecompanion").setup({
-            adapters = {
-                -- Fixed: Deepseek is now a direct key
-                deepseek = function()
-                    return require("codecompanion.adapters").extend("deepseek", {
-                        env = {
-                            api_key = "sk-580b6d77bc94499781e7a3fc5cc20741",
-                        },
-                        parameters = {
-                            max_tokens = 8192,
-                            temperature = 0.7,
-                        },
-                    })
-                end,
-                -- Gemini adapter configuration
-                gemini = function()
-                    return require("codecompanion.adapters").extend("gemini", {
-                        env = {
-                            -- Ideally, use an environment variable: os.getenv("GEMINI_API_KEY")
-                            api_key = "AIzaSyBgPh-RipnYsBZ8CQDQPMUGXCM0asBBKzM",
-                        },
-                        schema = {
-                            model = {
-                                default = "gemini-pro-latest", -- Specify a valid model version
-                            },
-                        },
-                        parameters = {
-                            max_tokens = 8192,
-                            temperature = 0.7,
-                        },
-                    })
-                end,
-            },
-            prompt_library = {
-                ["RussianChat"] = {
-                    strategy = "chat",
-                    description = "russian lang",
-                    opts = {},
-                    prompts = {
-                        {
-                            role = "system",
-                            content = "You are an experienced developer with c++",
-                        },
-                        {
-                            role = "user",
-                            content = "Отвечай и рассуждай на русском языке ...",
-                        },
-                    },
+      require("codecompanion").setup({
+        adapters = {
+          qwen = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              name = "qwen",
+              env = {
+                url = "http://127.0.0.1:11434",
+              },
+              schema = {
+                model = {
+                  default = "qwen3-coder-next",
                 },
+              },
+            })
+          end,
+        },
+  
+        prompt_library = {
+          ["RussianChat"] = {
+            strategy = "chat",
+            description = "russian lang",
+            opts = {},
+            prompts = {
+              {
+                role = "system",
+                content = "You are an experienced developer with c++",
+              },
+              {
+                role = "user",
+                content = "Отвечай и рассуждай на русском языке ...",
+              },
             },
-            strategies = {
-                chat = { adapter = "gemini" },
-                inline = { adapter = "gemini" },
-                agent = { adapter = "gemini" },
+          },
+        },
+  
+        strategies = {
+          chat = { adapter = "qwen" },
+          inline = { adapter = "qwen" },
+          agent = { adapter = "qwen" },
+        },
+  
+        extensions = {
+          history = {
+            enabled = true,
+            opts = {
+              keymap = "gh",
+              save_chat_keymap = "sc",
+              auto_save = true,
+              expiration_days = 0,
+              picker = "telescope",
+              picker_keymaps = {
+                rename = { n = "r", i = "<M-r>" },
+                delete = { n = "d", i = "<M-d>" },
+                duplicate = { n = "<C-y>", i = "<C-y>" },
+              },
+              auto_generate_title = true,
+              title_generation_opts = {
+                adapter = "qwen",
+                model = "qwen3-coder-next",
+                refresh_every_n_prompts = 0,
+                max_refreshes = 3,
+              },
+              continue_last_chat = false,
+              delete_on_clearing_chat = false,
+              dir_to_save = vim.fn.expand("~/Documents/qwen_chats"),
+              enable_logging = false,
+              chat_filter = nil,
             },
-            extensions = {
-                history = {
-                    enabled = true,
-                    opts = {
-                        keymap = "gh",
-                        save_chat_keymap = "sc",
-                        auto_save = true,
-                        expiration_days = 0,
-                        picker = "telescope",
-                        picker_keymaps = {
-                            rename = { n = "r", i = "<M-r>" },
-                            delete = { n = "d", i = "<M-d>" },
-                            duplicate = { n = "<C-y>", i = "<C-y>" },
-                        },
-                        auto_generate_title = true,
-                        title_generation_opts = {
-                            adapter = "gemini",
-                            model = "gemini-pro-latest",
-                            refresh_every_n_prompts = 0,
-                            max_refreshes = 3,
-                        },
-                        continue_last_chat = false,
-                        delete_on_clearing_chat = false,
-                        dir_to_save = vim.fn.expand("~/Documents/gemini_chats"),
-                        enable_logging = false,
-                        chat_filter = nil,
-                    }
-                },
-            }
-        })
-    end
+          },
+        },
+      })
+    end,
   },
-
   {
     "lewis6991/gitsigns.nvim",
     config = function()
