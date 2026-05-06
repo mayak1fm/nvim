@@ -1,5 +1,96 @@
 return {
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    event = "VeryLazy",
+    opts = {
+      ensure_installed = {
+        -- LSP
+        "clangd",
+        "pyright",
+        "lua-language-server",
+        -- Formatters
+        "stylua",
+        "clang-format",
+        "black",
+        -- DAP
+        "codelldb",
+      },
+      auto_update = false,
+      run_on_start = true,
+    },
+  },
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = "VeryLazy",
+    config = function()
+      require("harpoon"):setup()
+    end,
+  },
+  {
+    "p00f/clangd_extensions.nvim",
+    ft = { "c", "cpp", "cuda" },
+    config = function()
+      require("clangd_extensions").setup({
+        inlay_hints = {
+          inline = true,
+          only_current_line = false,
+          show_parameter_hints = true,
+          parameter_hints_prefix = "← ",
+          other_hints_prefix = "→ ",
+        },
+        ast = {
+          role_icons = {
+            type = "",
+            declaration = "",
+            expression = "",
+            specifier = "",
+            statement = "",
+            ["template argument"] = "",
+          },
+        },
+      })
+    end,
+  },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = { "nvim-neotest/nvim-nio" },
+    ft = { "c", "cpp", "cuda" },
+    config = function()
+      require "configs.dapadapter"
+      require "configs.dapconfig"
+
+      -- иконки в желобе
+      vim.fn.sign_define("DapBreakpoint",          { text = "●", texthl = "DiagnosticError" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DiagnosticWarn" })
+      vim.fn.sign_define("DapStopped",             { text = "▶", texthl = "DiagnosticInfo", linehl = "CursorLine" })
+    end,
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    ft = { "c", "cpp", "cuda" },
+    config = function()
+      local dap, dapui = require "dap", require "dapui"
+      dapui.setup()
+      -- автоматически открывать/закрывать UI при старте/завершении сессии
+      dap.listeners.after.event_initialized["dapui_config"]  = function() dapui.open() end
+      dap.listeners.before.event_terminated["dapui_config"]  = function() dapui.close() end
+      dap.listeners.before.event_exited["dapui_config"]      = function() dapui.close() end
+    end,
+  },
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-treesitter/nvim-treesitter" },
+    ft = { "c", "cpp", "cuda" },
+    opts = {
+      commented = false,
+      virt_text_pos = "eol",
+    },
+  },
+  {
     "stevearc/conform.nvim",
     opts = require "configs.conform",
   },
@@ -26,6 +117,51 @@ return {
         "markdown_inline", "cmake", "dockerfile"
       },
     },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    event = "VeryLazy",
+    config = function()
+      require("nvim-treesitter-textobjects").setup({
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ["af"] = { query = "@function.outer", desc = "around function" },
+            ["if"] = { query = "@function.inner", desc = "inside function" },
+            ["ac"] = { query = "@class.outer",    desc = "around class" },
+            ["ic"] = { query = "@class.inner",    desc = "inside class" },
+            ["aa"] = { query = "@parameter.outer", desc = "around argument" },
+            ["ia"] = { query = "@parameter.inner", desc = "inside argument" },
+            ["ab"] = { query = "@block.outer",     desc = "around block" },
+            ["ib"] = { query = "@block.inner",     desc = "inside block" },
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            ["]f"] = { query = "@function.outer", desc = "Next function start" },
+            ["]c"] = { query = "@class.outer",    desc = "Next class start" },
+          },
+          goto_previous_start = {
+            ["[f"] = { query = "@function.outer", desc = "Prev function start" },
+            ["[c"] = { query = "@class.outer",    desc = "Prev class start" },
+          },
+        },
+        swap = {
+          enable = true,
+          swap_next     = { ["<leader>sn"] = "@parameter.inner" },
+          swap_previous = { ["<leader>sp"] = "@parameter.inner" },
+        },
+      })
+    end,
+  },
+  {
+    "sindrets/diffview.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewToggleFiles" },
   },
   {
     "sitiom/nvim-numbertoggle",
@@ -70,7 +206,7 @@ return {
 
   {
     "epwalsh/obsidian.nvim",
-    version = "*", -- recommended, use latest release instead of latest commit
+    version = "*",
     lazy = true,
     ft = "markdown",
     dependencies = {
@@ -81,8 +217,10 @@ return {
         {
           name = "second_brain",
           path = "~/Documents/second_brain",
-        }
+        },
       },
+      -- disable obsidian UI to avoid conflict with render-markdown
+      ui = { enable = false },
     },
   },
   {
@@ -259,13 +397,13 @@ return {
     cmd = { "Shades", "Huefy" },
   },
   {
-      'nvim-flutter/flutter-tools.nvim',
-      lazy = false,
-      dependencies = {
-          'nvim-lua/plenary.nvim',
-          'stevearc/dressing.nvim', -- optional for vim.ui.select
-      },
-      config = true,
+    "nvim-flutter/flutter-tools.nvim",
+    ft = "dart",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "stevearc/dressing.nvim",
+    },
+    config = true,
   },
   {
     "kdheepak/lazygit.nvim",
@@ -280,8 +418,5 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    keys = {
-      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
-    }
   },
 }

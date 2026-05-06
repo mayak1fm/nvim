@@ -1,41 +1,61 @@
-local dap = require('dap')
-dap.configurations.cpp = {
+local dap = require "dap"
+
+local function pick_executable()
+  return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+end
+
+local lldb_configs = {
   {
-    name = 'Attach',
-    type = 'lldb',
-    request = 'attach',
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-    end,
-    pid = function()
-       local name = vim.fn.input('Executable name (filter): ')
-       return require("dap.utils").pick_process({ filter = name })
-    end,
-    cwd = '${workspaceFolder}',
+    name = "Launch",
+    type = "lldb",
+    request = "launch",
+    program = pick_executable,
+    cwd = "${workspaceFolder}",
     stopOnEntry = false,
     args = {},
-    runInTerminal = true,
-    -- 💀
-    -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
-    --
-    --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-    --
-    -- Otherwise you might get the following error:
-    --
-    --    Error on launch: Failed to attach to the target process
-    --
-    -- But you should be aware of the implications:
-    -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
   },
   {
-    name = 'Launch',
-    type = 'lldb',
-    request = 'launch',
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    name = "Attach",
+    type = "lldb",
+    request = "attach",
+    program = pick_executable,
+    pid = function()
+      local name = vim.fn.input "Executable name (filter): "
+      return require("dap.utils").pick_process { filter = name }
     end,
-    cwd = '${workspaceFolder}',
+    cwd = "${workspaceFolder}",
     stopOnEntry = false,
     args = {},
-  }
+    -- требует: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+    runInTerminal = true,
+  },
 }
+
+local codelldb_configs = {
+  {
+    name = "Launch (codelldb)",
+    type = "codelldb",
+    request = "launch",
+    program = pick_executable,
+    cwd = "${workspaceFolder}",
+    stopOnEntry = false,
+    args = {},
+  },
+}
+
+-- применяем то что доступно
+local function make_configs()
+  local cfgs = {}
+  if dap.adapters.codelldb then
+    vim.list_extend(cfgs, codelldb_configs)
+  end
+  if dap.adapters.lldb then
+    vim.list_extend(cfgs, lldb_configs)
+  end
+  return cfgs
+end
+
+local configs = make_configs()
+dap.configurations.cpp  = configs
+dap.configurations.c    = configs
+dap.configurations.cuda = configs

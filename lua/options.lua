@@ -3,13 +3,16 @@ require "nvchad.options"
 -- add yours here!
 
 local o = vim.o
-o.cursorlineopt = 'both' -- to enable cursorline!
-vim.opt.relativenumber = true -- Показывать относительные номера
-o.shell = "/usr/bin/zsh" -- терминал zsh
-o.clipboard = "unnamedplus" -- чтоб копировать по кайфу
+o.cursorlineopt = "both"
+vim.opt.relativenumber = true
+o.shell = "/usr/bin/zsh"
+o.clipboard = "unnamedplus"
+vim.opt.mouse = "a"
 
 vim.filetype.add({
   extension = {
-    tpp = "cpp", -- Распознавать .tpp файлы как C++
+    tpp = "cpp",
+    cu = "cuda",
+    cuh = "cuda",
   },
 })
