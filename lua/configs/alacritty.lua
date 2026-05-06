@@ -3,26 +3,12 @@ local M = {}
 local out      = vim.fn.expand "~/.config/alacritty/theme-current.toml"
 local main_cfg = vim.fn.expand "~/.config/alacritty/alacritty.toml"
 
-function M.sync()
-  local ok, c = pcall(dofile, vim.g.base46_cache .. "colors")
-  if not ok or not c then
-    vim.notify("alacritty sync: cannot read base46 colors", vim.log.levels.WARN)
-    return
-  end
-
+local function sync_alacritty(c)
   local lines = {
     "[colors.primary]",
     ('background = "%s"'):format(c.black),
     ('foreground = "%s"'):format(c.white),
     ('dim_foreground = "%s"'):format(c.grey_fg),
-    "",
-    "[colors.cursor]",
-    ('text = "%s"'):format(c.black),
-    ('cursor = "%s"'):format(c.green),
-    "",
-    "[colors.vi_mode_cursor]",
-    ('text = "%s"'):format(c.black),
-    ('cursor = "%s"'):format(c.blue),
     "",
     "[colors.selection]",
     ('text = "%s"'):format(c.black),
@@ -70,6 +56,41 @@ function M.sync()
 
   -- touch основного конфига чтобы Alacritty подхватил изменение импортируемого файла
   vim.uv.fs_utime(main_cfg, os.time(), os.time())
+end
+
+local function sync_tmux(c)
+  if vim.fn.executable "tmux" == 0 then return end
+  if not vim.env.TMUX then return end
+
+  local cmds = {
+    -- статусбар
+    ('tmux set -g status-style "fg=%s,bg=%s"'):format(c.white, c.statusline_bg),
+    ('tmux set -g status-left "#[fg=%s]%%H:%%M #[fg=%s]• "'):format(c.green, c.white),
+    -- активное окно
+    ('tmux set -g window-status-current-format "#[fg=%s,bg=%s] #I:#W "'):format(c.black, c.green),
+    -- неактивные окна (fg = цвет фона активной вкладки)
+    ('tmux set -g window-status-format "#[fg=%s,bg=%s] #I:#W "'):format(c.green, c.one_bg2),
+    -- границы панелей
+    ('tmux set -g pane-border-style "fg=%s"'):format(c.one_bg3),
+    ('tmux set -g pane-active-border-style "fg=%s"'):format(c.green),
+    -- сообщения
+    ('tmux set -g message-style "fg=%s,bg=%s"'):format(c.black, c.yellow),
+  }
+
+  for _, cmd in ipairs(cmds) do
+    vim.fn.system(cmd)
+  end
+end
+
+function M.sync()
+  local ok, c = pcall(dofile, vim.g.base46_cache .. "colors")
+  if not ok or not c then
+    vim.notify("theme sync: cannot read base46 colors", vim.log.levels.WARN)
+    return
+  end
+
+  sync_alacritty(c)
+  sync_tmux(c)
 end
 
 return M
