@@ -15,12 +15,17 @@ if not clangd_bin then
   return {}
 end
 
+local wrapper = vim.fn.stdpath "config" .. "/scripts/clangd-wrapper.sh"
+
 return {
+  -- wrapper выставляет XDG_CACHE_HOME=<git root>/.cache перед запуском clangd
+  -- индекс хранится в проекте рядом с compile_commands.json, переживает пересоздание контейнера
   cmd = {
+    wrapper,
     clangd_bin,
     "--pch-storage=memory",
     "--background-index",
-    "--background-index-priority=low",
+    "--background-index-priority=normal",
     "--clang-tidy=false",
     "--header-insertion=never",
     "--completion-style=bundled",
