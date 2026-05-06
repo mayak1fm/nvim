@@ -61,6 +61,25 @@ vim.g.clipboard = {
   },
 }
 
+-- синхронизировать тему Alacritty при смене темы NvChad
+vim.api.nvim_create_autocmd("User", {
+  pattern = "NvThemeReload",
+  callback = function()
+    vim.schedule(function()
+      local ok, err = pcall(require("configs.alacritty").sync)
+      if ok then
+        vim.notify("Alacritty theme synced", vim.log.levels.INFO)
+      else
+        vim.notify("Alacritty sync error: " .. tostring(err), vim.log.levels.ERROR)
+      end
+    end)
+  end,
+})
+-- применить тему сразу при старте
+vim.schedule(function()
+  require("configs.alacritty").sync()
+end)
+
 vim.schedule(function()
   require "mappings"
 end)
