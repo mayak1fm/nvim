@@ -1,4 +1,6 @@
 return {
+  { "3rd/image.nvim", enabled = false },
+
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
@@ -193,6 +195,63 @@ return {
     "nvim-neotest/nvim-nio"
   },
   { "nvim-tree/nvim-web-devicons", opts = {} },
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("nvim-tree").setup({
+        on_attach = function(bufnr)
+          local api = require "nvim-tree.api"
+  
+          -- только свои бинды (default_on_attach НЕ вызываем)
+          vim.keymap.set("n", "<CR>", api.node.open.edit, {
+            buffer = bufnr,
+            noremap = true,
+            silent = true,
+          })
+  
+          vim.keymap.set("n", "q", api.tree.close, {
+            buffer = bufnr,
+            noremap = true,
+            silent = true,
+          })
+  
+          vim.keymap.set("n", "<C-S-l>", api.filter.live.start, {
+            buffer = bufnr,
+            noremap = true,
+            silent = true,
+            desc = "Live Filter: Start",
+          })
+        end,
+  
+        view = {
+          width = "30%",
+        },
+        renderer = {
+          indent_markers = {
+            enable = true,
+          },
+        },
+        actions = {
+          change_dir = {
+            enable = true,
+            global = false,
+          },
+          open_file = {
+            resize_window = true,
+            quit_on_open = false,
+          },
+        },
+        hijack_directories = {
+          enable = false,
+        },
+        update_focused_file = {
+          enable = true,
+          update_root = false,
+        },
+      })
+    end,
+  },
 
   {
     "MeanderingProgrammer/markdown.nvim",
@@ -224,128 +283,25 @@ return {
     },
   },
   {
-    "nvim-tree/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("nvim-tree").setup({
-        view = {
-          width = "30%", -- Ширина окна в процентах от ширины экрана
+    "3rd/image.nvim",
+    ft = { "markdown" },
+    opts = {
+      backend = "kitty",
+      integrations = {
+        markdown = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "markdown" },
         },
-        renderer = {
-          indent_markers = {
-            enable = true, -- Включить маркеры отступов
-          },
-        },
-        actions = {
-          change_dir = {
-            enable = true,  -- Синхронизировать текущий каталог с корнем дерева
-            global = false, -- Не изменять глобальный каталог
-          },
-          open_file = {
-            resize_window = true, -- Автоматически изменять размер окна
-            quit_on_open = false, -- Не закрывать дерево при открытии файла
-          },
-        },
-        hijack_directories = {
-          enable = false, -- Блокируем смещение корня при открытии папки
-        },
-        update_focused_file = {
-          enable = true,       -- Обновлять фокус на текущем файле
-          update_root = false, -- Синхронизировать корень дерева с текущим каталогом
-        },
-      })
-      -- Автоматически переходить к текущему файлу при открытии nvim-tree
-      vim.api.nvim_create_autocmd("BufEnter", {
-        callback = function()
-          if vim.bo.filetype == "NvimTree" then
-            require("nvim-tree.api").tree.find_file({ open = true, focus = true })
-          end
-        end,
-      })
-    end,
-  },
-  {
-    "olimorris/codecompanion.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "ravitemer/codecompanion-history.nvim",
-      "ravitemer/mcphub.nvim",
+      },
+      max_width = 100,
+      max_height = 30,
+      max_height_window_percentage = math.huge,
+      max_width_window_percentage = math.huge,
+      window_overlap_clear_enabled = true,
     },
-    event = "VeryLazy",
-    config = function()
-      require("codecompanion").setup({
-        adapters = {
-          qwen = function()
-            return require("codecompanion.adapters").extend("ollama", {
-              name = "qwen",
-              env = {
-                url = "http://127.0.0.1:11434",
-              },
-              schema = {
-                model = {
-                  default = "qwen3-coder-next",
-                },
-              },
-            })
-          end,
-        },
-  
-        prompt_library = {
-          ["RussianChat"] = {
-            strategy = "chat",
-            description = "russian lang",
-            opts = {},
-            prompts = {
-              {
-                role = "system",
-                content = "You are an experienced developer with c++",
-              },
-              {
-                role = "user",
-                content = "Отвечай и рассуждай на русском языке ...",
-              },
-            },
-          },
-        },
-  
-        strategies = {
-          chat = { adapter = "qwen" },
-          inline = { adapter = "qwen" },
-          agent = { adapter = "qwen" },
-        },
-  
-        extensions = {
-          history = {
-            enabled = true,
-            opts = {
-              keymap = "gh",
-              save_chat_keymap = "sc",
-              auto_save = true,
-              expiration_days = 0,
-              picker = "telescope",
-              picker_keymaps = {
-                rename = { n = "r", i = "<M-r>" },
-                delete = { n = "d", i = "<M-d>" },
-                duplicate = { n = "<C-y>", i = "<C-y>" },
-              },
-              auto_generate_title = true,
-              title_generation_opts = {
-                adapter = "qwen",
-                model = "qwen3-coder-next",
-                refresh_every_n_prompts = 0,
-                max_refreshes = 3,
-              },
-              continue_last_chat = false,
-              delete_on_clearing_chat = false,
-              dir_to_save = vim.fn.expand("~/Documents/qwen_chats"),
-              enable_logging = false,
-              chat_filter = nil,
-            },
-          },
-        },
-      })
-    end,
   },
   {
     "lewis6991/gitsigns.nvim",
